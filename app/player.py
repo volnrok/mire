@@ -52,6 +52,14 @@ class Player():
 		TYPE_SOUNDER: 'sing <direction>: Sing in a direction and listen for echoes.\nSinging tells you how far away a wall is.\nSinging also lets you know if your voice can reach back to you.\nIf a strong echo is present, you are singing into a closed chamber.'
 	}
 
+	EXHAUSTION_MILESTONES = {
+		75: "You are still feeling great and ready for anything this maze will throw at you!",
+		50: "You are beginning to feel tired",
+		25: "You are exhausted",
+		10: "Your body tires. Every step is a great effort",
+		0: 'You have taken your last laborious step, and collapse.'
+	}
+
 	def __init__(self, name):
 		self.name = name
 		self.room = None
@@ -64,6 +72,17 @@ class Player():
 			return '{}\n\n{}'.format(Player.TYPE_NAMES[self.type], Player.TYPE_DESCRIPTIONS[self.type])
 		except KeyError:
 			return '(Type 1 - 7 to select a class)'
+
+	def passed_exhaustion_milestone(self):
+		return self.steps_left in self.EXHAUSTION_MILESTONES.keys()
+
+	def get_exhaustion(self):
+		sorted_keys = [*self.EXHAUSTION_MILESTONES.keys()]
+		sorted_keys.sort()
+		
+		for k in sorted_keys:
+			if self.steps_left <= k:
+				return self.EXHAUSTION_MILESTONES[k]
 
 	def help_class(self):
 		try:
@@ -82,3 +101,4 @@ class Player():
 		join_room(room.name)
 		room.players.add(self)
 		self.room = room
+

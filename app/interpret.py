@@ -114,6 +114,11 @@ def command_go(player, *args):
 			send('The smell is stronger behind you, go back!')
 
 	player.steps_left -= 1
+
+	#hints the player on their movements left
+	if player.passed_exhaustion_milestone():
+		send(player.get_exhaustion())
+
 	won = player.room == app.game.end_room
 	if player.steps_left <= 0:
 		send('You have taken your last laborious step, and collapse.')
@@ -187,7 +192,16 @@ def command_compass(player, *args):
 
 @command('help', 'what')
 def command_help(player, *args):
+	print("args are: {}".format(args))
 	if len(args) > 1 and args[1] == 'class':
 		send(player.help_class())
 		return
 	send('Here is a list of things you can do:\nsay <something>: Say something to the room\njump: Do some jumps\npoint <dir>: Point in a direction\nlook: Look around\n<dir> / go <dir>: Move in a direction\nstatus: Character status, number of moves left.\nhelp class: Class details')
+
+	else:
+		send('Here is a list of things you can do:\nsay <something>: Say something to the room\njump: Do some jumps\nlook: Look around\n<dir> / go <dir>: Move in a direction\nhelp class: Class details')
+		return
+
+@command('tired')
+def command_exhaustion(player, *args):
+	send(player.get_exhaustion())
